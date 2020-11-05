@@ -1,7 +1,11 @@
 from create_app import app
-from flask_restful import Api
+from apis import api_bp
+from flask import jsonify
 
 app.debug = True
 app.threaded = True
-api = Api(app)
-app=app
+app.register_blueprint(api_bp)
+
+# @app.errorhandler()
+# def error_handler():
+#     return jsonify(message='page/route not found.')
