@@ -2,8 +2,10 @@ from base58 import b58encode
 from hashlib import md5, sha1 
 from mnemonic import Mnemonic
 from uuid import uuid4
+from time import time
+from datetime import datetime, timedelta
 from chalicelib.config import Config
-import boto3
+import boto3, jwt
 
 def jsonify(**kwargs):
     return kwargs
@@ -29,8 +31,16 @@ class DynamodbHandler:
         self.identity_dydb_table = self.dynamodb.Table(Config.identity_dydb_table)
         self.identity_dydb_table.put_item(Item=self.data)
 
-
-
+class Authenticator:
+    def __init__(self):
+        self.jwtAlgorithm = 'HS256'
+        self.jwtSecret = sha1(str(time()).encode('utf-8')).hexdigest()
+        self.jwtExpDeltaSec = 300
+    def create_token(self, username):
+        self.payload = {'username': username, 'exp': datetime.utcnow()+timedelta(seconds=self.jwtExpDeltaSec)}
+        self.jwt_token = jwt.encode(self.payload, self.jwtSecret, self.jwtAlgorithm)
+        return self.jwt_token
 
 Address=Address()
 dynamoDb = DynamodbHandler()
+Authenticator= Authenticator()
