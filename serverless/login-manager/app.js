@@ -3,8 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const AWS = require('aws-sdk');
 AWS.config.update({region:'ap-south-1'});
-const config = require('./config.json')
-const { generateAccessToken, authenticateToken } = require('./expresslib/resources')
+const config = require('./config.json');
+const { generateAccessToken, authenticateToken } = require('./expresslib/resources');
 
 const app = express();
 const dynamodb = new AWS.DynamoDB.DocumentClient();

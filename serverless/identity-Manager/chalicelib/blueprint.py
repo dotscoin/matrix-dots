@@ -1,3 +1,7 @@
 from chalice import Blueprint
 
-self_bp = Blueprint(__name__)
+class BluePrintRegister:
+    def __init__(self):
+        self.bluePrintIns = Blueprint(__name__)
+
+BluePrintRegister = BluePrintRegister()
