@@ -34,12 +34,19 @@ class DynamodbHandler:
 class Authenticator:
     def __init__(self):
         self.jwtAlgorithm = 'HS256'
-        self.jwtSecret = sha1(str(time()).encode('utf-8')).hexdigest()
+        self.jwtSecret = 'aniketsarkar'
         self.jwtExpDeltaSec = 300
     def create_token(self, username):
         self.payload = {'username': username, 'exp': datetime.utcnow()+timedelta(seconds=self.jwtExpDeltaSec)}
         self.jwt_token = jwt.encode(self.payload, self.jwtSecret, self.jwtAlgorithm)
         return self.jwt_token
+    def validate_token(self, jwtToken):
+        self.jwtToken = jwtToken
+        try: 
+            self.payload = jwt.decode(self.jwtToken, self.jwtSecret, algorithms=[self.jwtAlgorithm])
+            return True
+        except (jwt.DecodeError, jwt.ExpiredSignatureError): return False
+        
 
 Address=Address()
 dynamoDb = DynamodbHandler()

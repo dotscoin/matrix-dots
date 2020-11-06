@@ -2,8 +2,11 @@ from chalice import Chalice
 import boto3
 from chalicelib import Address, jsonify, dynamoDb, Authenticator
 from chalicelib.config import Config
+from chalicelib.blueprint import self_bp
+from chalicelib.decorators import jwt_required
 
 app = Chalice(app_name='identity-Manager')
+app.register_blueprint(self_bp)
 dynamodb = boto3.resource('dynamodb')
 
 @app.route('/v1/get-token')
@@ -19,6 +22,7 @@ def get_token():
     return jsonify(jwt_token=jwtToken, is_token=True)
 
 @app.route('/v1/get-address')
+@jwt_required
 def get_address():
     mnemonic, address, colab, uuid = Address.generate_the_base()
     data = {'mnemonic': mnemonic, 'address': address, 'colab':colab, 'uuid': uuid}
