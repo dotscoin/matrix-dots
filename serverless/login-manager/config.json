@@ -1,0 +1,5 @@
+{
+    "aws_table_name" : "identity-holder",
+    "aws_service_user_name_table" : "service-user-name",
+    "ACCESS_TOKEN_SECRET" : "cae77a8f53af3a72ab56f0e64be872094947ceb3"
+}
