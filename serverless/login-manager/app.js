@@ -13,21 +13,28 @@ const port = 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.get('/api/v1/get-token', (req, res) =>{
-    const username = req.query.username;
-    const params = {TableName: config.aws_service_user_name_table, Key:{username: username}}
+app.post('/api/v1/get-token', (req, res) =>{
+    const username = req.body.username;
+    const password = req.body.password;
+    const confirm = req.body.confirm;
+    const params = {TableName: config.aws_service_user_name_table, Key:{username: username}};
     dynamodb.get(params, function(err, data){
         if (err) {
-            res.send({message:'failed to get user data', is_token: false, err:err});
+            res.send({message:'failed to get user data', is_token: false});
         }else{
             try{
                 const user_is_active = data.Item.is_active;
-                if (!user_is_active) {
+                const dbPassword = data.Item.password;
+                const dbConfirm = data.Item.confirm;
+                if (dbPassword !== password || dbConfirm !== confirm){
+                    res.send({message: 'Invalid user password/confirm'})
+                }
+                else if (!user_is_active) {
                     res.send({message:'inactive username', is_token: false});
                 }
                 else {
                     const accessToken = generateAccessToken(username);
-                    res.send({access_token: accessToken});
+                    res.send({access_token: accessToken, is_token: true});
                 }
             }catch{
                 res.send({message:'invalid username', is_token: false});
@@ -36,9 +43,9 @@ app.get('/api/v1/get-token', (req, res) =>{
     })
 });
 
-app.get('/api/v1/login-user', authenticateToken, (req, res) =>{
-    const mnemonic = req.query.mnemonic;
-    const uuid = req.query.uuid;
+app.post('/api/v1/login-user', authenticateToken, (req, res) =>{
+    const mnemonic = req.body.mnemonic;
+    const uuid = req.body.uuid;
     const timestamp = new Date(new Date().toUTCString());
     const Item = {mnemonic:mnemonic, uuid:uuid, timestamp:timestamp};
     const params = {

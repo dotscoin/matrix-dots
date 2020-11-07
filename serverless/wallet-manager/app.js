@@ -12,17 +12,25 @@ const port = 3000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use("/api/v1/wallet", require("./expresslib/wallet/routes"));
 
-app.get('/api/v1/get-token', (req, res) =>{
-    const username = req.query.username;
+app.post('/api/v1/get-token', (req, res) =>{
+    const username = req.body.username;
+    const password = req.body.password;
+    const confirm = req.body.confirm;
     const params = {TableName: config.aws_service_user_name_table, Key:{username: username}};
     dynamodb.get(params, function(err, data){
         if (err) {
-            res.send({message:'failed to get user data', is_token: false, err:err});
+            res.send({message:'failed to get user data', is_token: false});
         }else{
             try{
                 const user_is_active = data.Item.is_active;
-                if (!user_is_active) {
+                const dbPassword = data.Item.password;
+                const dbConfirm = data.Item.confirm;
+                if (dbPassword !== password ||  dbConfirm !== confirm){
+                    res.send({message: 'Invalid user password/confirm'})
+                }
+                else if (!user_is_active) {
                     res.send({message:'inactive username', is_token: false});
                 }
                 else {
