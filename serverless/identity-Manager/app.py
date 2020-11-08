@@ -25,9 +25,11 @@ def get_token():
     return jsonify(jwt_token=jwtToken, is_token=True)
 
 @app.route('/v1/get-address')
-@jwt_required
+#@jwt_required
 def get_address():
     mnemonic, address, colab, uuid, walletId, walletKey, walletSecret = Address.generate_the_base()
+    print ('aniket')
+    print (walletId)
     data_for_identity = {'mnemonic': mnemonic, 'address':address, 'colab':colab, 'uuid':uuid, 'walletId':walletId}
     dynamoDb.put_data(data=data_for_identity)
     data_for_wallet = {'walletId':walletId, 'walletKey':walletKey, 'walletSecret':walletSecret, 'walletBalance': 0} 

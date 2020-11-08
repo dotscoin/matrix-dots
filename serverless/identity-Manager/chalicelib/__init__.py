@@ -21,9 +21,9 @@ class Address:
         self.colab = (b58encode(self.preColab)).decode('utf-8')
         self.uuid = str(uuid4())
         self.sk = SigningKey.generate(curve=NIST384p)
-        self.walletId = datetime.timestamp(datetime.now())
-        self.walletKey = b58encode(self.sk).decode('utf-8')
-        self.walletSecret = b58encode(self.sk.verifying_key).decode('utf-8')
+        self.walletId = b58encode(str(datetime.timestamp(datetime.now())).encode('utf-8')).decode('utf-8')
+        self.walletKey = self.sk.to_string().hex()
+        self.walletSecret = self.sk.verifying_key.to_string().hex()
         return(self.mnemonic, self.address, self.colab, self.uuid, self.walletId, self.walletKey, self.walletSecret)
 
 class DynamodbHandler:
