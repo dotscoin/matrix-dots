@@ -11,28 +11,21 @@ async function get_wallet_balance(walletId){
 
 async function uuid_to_walletId(uuid){
     const Key = {uuid: uuid};
-    const identity = new IdentityDetails(Key)
+    const identity = new IdentityDetails(Key);
     const data = await identity.get_data();
-    console.log(data)
-    return data.Item.walletId
+    try{
+        return data.Item.walletId;
+    }catch {
+        return false;
+    }
 }
 
-// async function uuid_to_walletId(uuid){
-//     return new Promise( async(resolve, reject) => {
-//         const Key = {uuid: uuid}
-//         const identity = new IdentityDetails(Key)
-//         const data = await identity.get_data()
-//         console.log(data.Item)
-//         try {
-//             console.log('data')
-//             console.log(data.Item.walletId)
-//             resolve(data.Item.walletId)
-//         }
-//         catch{
-//             reject('err')
-//         }
-//         })
-// }
+async function update_wallet_balance(walletId, balance){
+    const Key = {walletId: walletId};
+    const wallet = new WalletDetails(Key);
+    const message = await wallet.update_balance(balance);
+    //console.log(message);
+    return message;
+}
 
-
-module.exports = { get_wallet_balance, uuid_to_walletId }
+module.exports = { get_wallet_balance, uuid_to_walletId, update_wallet_balance }
