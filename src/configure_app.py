@@ -18,6 +18,6 @@ def before_request():
     app.permanent_session_lifetime = timedelta(minutes=20)
     session.modified = True
 
-# @app.errorhandler()
-# def error_handler():
-#     return jsonify(message='page/route not found.')
+@app.errorhandler(404)
+def not_found_error(e):
+     return jsonify(message='page/route not found.'), 404

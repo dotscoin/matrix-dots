@@ -6,6 +6,8 @@ db = SQLAlchemy()
 class BaseUser(db.Model):
     __tablename__ = 'base_user'
     id = db.Column(db.Integer, primary_key=True, unique=True)
+    first_name = db.Column(db.String(500), unique=False)
+    last_name = db.Column(db.String(500), unique=False)
     parent_colab = db.Column(db.String(200), unique=False)
     address = db.Column(db.String(200), unique=True)
     colab = db.Column(db.String(200), unique=True)

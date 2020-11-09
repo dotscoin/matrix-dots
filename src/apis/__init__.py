@@ -3,9 +3,9 @@ from flask import Blueprint
 from flask_restful import Api
 
 routeResourceDict = {
-    "/" : "index",
-    "/api/v1/add-user": "addUser",
-    "/api/v1/login-user": "loginUser"
+    "/" : "Index",
+    "/api/v1/add-user": "AddUser",
+    "/api/v1/login-user": "LoginUser"
 }
 
 class RouteRunner:

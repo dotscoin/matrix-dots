@@ -3,17 +3,17 @@ from flask import jsonify, request
 from models import *
 import requests
 
-class index(Resource):
+class Index(Resource):
     def get(self):
         return jsonify(message="this is the index page")
 
-class loginUser(Resource):
+class LoginUser(Resource):
     def get(self):
         self.mnemonic = request.args.get('mnemonic')
         self.uuid = request.args.get('uuid')
         return jsonify(mnemonic=self.mnemonic, uuid=self.uuid)
 
-class addUser(Resource):
+class AddUser(Resource):
     def get(self):
         self.parentColab = request.args.get('parent_colab')
         self.url = "https://2khqa4xqm7.execute-api.ap-south-1.amazonaws.com/api/v1/get-address"

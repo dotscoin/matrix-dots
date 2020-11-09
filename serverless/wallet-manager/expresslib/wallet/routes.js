@@ -20,7 +20,8 @@ router.get('/update-balance', async (req, res) => { // adding the new balance wi
     console.log(newWalletBalance);
     const walletId = await uuid_to_walletId(uuid)
     const oldWalletBalance = await get_wallet_balance(walletId)
-    const message = await update_wallet_balance(walletId, newWalletBalance+oldWalletBalance)
+    const updatedWalletBalance = (newWalletBalance+oldWalletBalance);
+    const message = await update_wallet_balance(walletId, updatedWalletBalance)
     const walletBalanceAfter = await get_wallet_balance(walletId)
     res.send({message:'wallet balance updated.', updated_wallet_balance: walletBalanceAfter})
 })
