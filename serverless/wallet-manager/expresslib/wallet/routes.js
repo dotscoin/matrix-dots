@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-// import router from "express";
 const { get_wallet_balance, uuid_to_walletId, update_wallet_balance } = require("./views");
 
 router.get('/', (req, res) => {
